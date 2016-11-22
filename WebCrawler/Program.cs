@@ -106,6 +106,26 @@ public class MyClass
 
     }
 
+    public static string getRobot(string url)
+    {
+        //WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
+        WebRequest req = WebRequest.Create(url);
+        ((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
+        req.Timeout = 1000; // 1000ms
+        // handle https
+        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+        // receive response from target url
+        WebResponse resp = req.GetResponse();
+        // get response stream (data)
+        Stream st = resp.GetResponseStream();
+        // create streamreader pbject to read the data
+        StreamReader sr = new StreamReader(st);
+        string page = sr.ReadToEnd();
+        sr.Close();
+        resp.Close();
+        return page;
+    }
+
     public static Dictionary<string, string> getHeader(string url, string filePath)
     {
         Dictionary<string, string> header = new Dictionary<string, string>();
@@ -837,6 +857,8 @@ public class MyClass
                 //CCWL(ConsoleColor.Red, previousURL.ToString());
                 string currentDomainName = "";
                 string previousDomainName = "";
+                bool haveRobot = false;
+                bool canDownload = false;
                 if (previousURL != "")
                 {
                     
@@ -853,9 +875,39 @@ public class MyClass
                         previousDomainName += previousURL[i];
                         //CCW(ConsoleColor.Red, previousDomainName[i].ToString());
                     }
+                    //CCWL(ConsoleColor.Red, currentDomainName + ".ku.ac.th/robots.txt");
+                    //CCWL(ConsoleColor.Red, getPage(currentDomainName + ".ku.ac.th/robots.txt",0));
+                    //CCWL(ConsoleColor.Red, getPage("https://www.google.co.th/robots.txt", 0));
+                    try
+                    {
+                        if (getRobot(currentDomainName + ".ku.ac.th/robots.txt") != null)
+                        {
+                            haveRobot = true;
+                        }
+                    }
+                    catch
+                    {
+                        //CCWL(ConsoleColor.Red, "gg");
+                    }
+                    
                 }
 
-                if (previousURL.Equals("") || !currentDomainName.Equals(previousDomainName) || limitCount > limitLoad )
+                //check robots.txt
+                if (haveRobot)
+                {
+                    if (getRobot(currentDomainName + ".ku.ac.th/robots.txt").Contains("User-agent: *"))
+                    {
+                        canDownload = true;
+                    }else
+                    {
+                        canDownload = false;
+                    }
+                }else
+                {
+                    canDownload = true;
+                }
+
+                if (previousURL.Equals("") || !currentDomainName.Equals(previousDomainName) || limitCount > limitLoad && canDownload)
                 {
                     if (limitCount > limitLoad)
                     {
