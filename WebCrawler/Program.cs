@@ -336,7 +336,8 @@ public class MyClass
                         .Replace("<a href=\"http://emp.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.mfpe.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.stbe.eng.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", "")
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">",""), thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -361,7 +362,8 @@ public class MyClass
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://ceinter.eng.ku.ac.th/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://ceinter.eng.ku.ac.th/\" target=\"_blank\">", "")
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -409,7 +411,8 @@ public class MyClass
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://emp.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", "")
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -432,7 +435,8 @@ public class MyClass
                     countFind++;
                     writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
