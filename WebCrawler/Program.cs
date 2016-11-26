@@ -137,7 +137,6 @@ public class MyClass
             ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
             // create response object
             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            if (resp.StatusCode == HttpStatusCode.OK)
             {
                 foreach (string key in resp.Headers)
                 {
@@ -489,7 +488,7 @@ public class MyClass
         Console.WriteLine(websitesDirPath + "\\" + url);
         string websiteFileName = url.Replace(":", ".").Replace("\\", ".").Replace("/", ".").Replace("?", ".");
         //also add url tag for indexing
-        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName + ".html");
+        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName + ".txt");
     }
 
     static string checkPage(string page, string startPos, string endPos)
@@ -814,7 +813,9 @@ public class MyClass
         initFile(chiefFile);
         initFile(reportErrorPageFile);
 
+        //string url = "https://ku.ac.th";
         string url = "https://mike.cpe.ku.ac.th/seed";
+
         //string url = "http://mike.cpe.ku.ac.th/01204453";
         //string url = "https://developer.android.com/preview/setup-sdk.html#java8";
         //string url = "http://www.eng.ku.ac.th/?page_id=9690";
@@ -838,7 +839,7 @@ public class MyClass
 
         frontierQ.enQueue(url);
         string page = "";
-        int nbPage = 0, MAXPAGE = 1000;
+        int nbPage = 0, MAXPAGE = 100;
 
         writeFile("1:ข้อมูลแสดงความสัมพันธ์การเชื่อมโยงกันของเว็บเพจ", linkPathFile);
         writeFile("2.1:Error Page Log", reportErrorPageFile);
