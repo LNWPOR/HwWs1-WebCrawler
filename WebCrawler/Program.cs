@@ -81,29 +81,54 @@ public class MyClass
         return true;
     }
 
+    public class MyWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var req = base.GetWebRequest(address) as HttpWebRequest;
+            req.AutomaticDecompression = DecompressionMethods.GZip;
+            return req;
+        }
+    }
+
     public static string getPage(string url, int nbPage)
     {
-        //WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
-        WebRequest req = WebRequest.Create(url);
-        ((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
-        req.Timeout = 1000; // 1000ms
-        // handle https
-        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-        // print some message
+        ////WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
+        //WebRequest req = WebRequest.Create(url);
+        //((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
+        //req.Timeout = 1000; // 1000ms
+        //// handle https
+        //ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+        //// print some message
+        //Console.Write("[{0}] ", nbPage);
+        //CCW(ConsoleColor.Green, "Downloading>> ");
+        //CCWL(ConsoleColor.White, url);
+        //// receive response from target url
+        //WebResponse resp = req.GetResponse();
+        //// get response stream (data)
+        //Stream st = resp.GetResponseStream();
+        //// create streamreader pbject to read the data
+        //StreamReader sr = new StreamReader(st);
+        //string page = sr.ReadToEnd();
+        //sr.Close();
+        //resp.Close();
+        //return page;
+
+        MyWebClient webClient = new MyWebClient();
+        webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
+        webClient.Encoding = System.Text.Encoding.UTF8;
         Console.Write("[{0}] ", nbPage);
         CCW(ConsoleColor.Green, "Downloading>> ");
         CCWL(ConsoleColor.White, url);
-        // receive response from target url
-        WebResponse resp = req.GetResponse();
-        // get response stream (data)
-        Stream st = resp.GetResponseStream();
-        // create streamreader pbject to read the data
-        StreamReader sr = new StreamReader(st);
-        string page = sr.ReadToEnd();
-        sr.Close();
-        resp.Close();
-        return page;
 
+        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
+        initFile(websitesDirPath + "\\" + websiteFileName);
+        
+        webClient.DownloadFile(url, websitesDirPath + "\\" + websiteFileName);
+        writeFile("\n<url>" + url + "</url>", websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
+        Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
+        //return webClient.DownloadString(url);
+        return File.ReadAllText(websitesDirPath + "\\" + websiteFileName);
     }
 
     public static string getRobot(string url)
@@ -490,10 +515,11 @@ public class MyClass
 
     static void saveWeb(string url, string page)
     {
-        Console.WriteLine(websitesDirPath + "\\" + url);
-        string websiteFileName = url.Replace(":", ".").Replace("\\", ".").Replace("/", ".").Replace("?", ".");
-        //also add url tag for indexing
-        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName + ".html");
+        
+        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_"); ;
+        initFile(websitesDirPath + "\\" + websiteFileName);
+        Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
+        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
     }
 
     static string checkPage(string page, string startPos, string endPos)
@@ -940,7 +966,8 @@ public class MyClass
                         //findCE(page);
                         //findCPESKE(page);
 
-                        saveWeb(url, page);
+                        //saveWeb(url, page);
+
                         //System.Threading.Thread.Sleep(100);
                         Console.WriteLine("{0} - {1}", frontierQ.Count(), visitedQ.Count());
                     }
