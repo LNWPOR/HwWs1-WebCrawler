@@ -93,42 +93,43 @@ public class MyClass
 
     public static string getPage(string url, int nbPage)
     {
-        //WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
-        WebRequest req = WebRequest.Create(url);
-        ((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
-        req.Timeout = 1000; // 1000ms
-        // handle https
-        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-        // print some message
-        Console.Write("[{0}] ", nbPage);
-        CCW(ConsoleColor.Green, "Downloading>> ");
-        CCWL(ConsoleColor.White, url);
-        // receive response from target url
-        WebResponse resp = req.GetResponse();
-        // get response stream (data)
-        Stream st = resp.GetResponseStream();
-        // create streamreader pbject to read the data
-        StreamReader sr = new StreamReader(st);
-        string page = sr.ReadToEnd();
-        sr.Close();
-        resp.Close();
-        return page;
-
-        //MyWebClient webClient = new MyWebClient();
-        //webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
-        //webClient.Encoding = System.Text.Encoding.UTF8;
+        ////WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
+        //WebRequest req = WebRequest.Create(url);
+        //((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
+        //req.Timeout = 1000; // 1000ms
+        //// handle https
+        //ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+        //// print some message
         //Console.Write("[{0}] ", nbPage);
         //CCW(ConsoleColor.Green, "Downloading>> ");
         //CCWL(ConsoleColor.White, url);
+        //// receive response from target url
+        //WebResponse resp = req.GetResponse();
+        //// get response stream (data)
+        //Stream st = resp.GetResponseStream();
+        //// create streamreader pbject to read the data
+        //StreamReader sr = new StreamReader(st);
+        //string page = sr.ReadToEnd();
+        //sr.Close();
+        //resp.Close();
+        //return page;
 
-        //string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
-        //initFile(websitesDirPath + "\\" + websiteFileName);
+        MyWebClient webClient = new MyWebClient();
+        webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
+        webClient.Encoding = System.Text.Encoding.UTF8;
+        Console.Write("[{0}] ", nbPage);
+        CCW(ConsoleColor.Green, "Downloading>> ");
+        CCWL(ConsoleColor.White, url);
 
-        //webClient.DownloadFile(url, websitesDirPath + "\\" + websiteFileName);
-        //writeFile("\n<url>" + url + "</url>", websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
-        //Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
-        ////return webClient.DownloadString(url);
-        //return File.ReadAllText(websitesDirPath + "\\" + websiteFileName);
+        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
+        initFile(websitesDirPath + "\\" + websiteFileName);
+
+        string websiteFilePath = websitesDirPath + "\\" + websiteFileName + ".txt";
+        webClient.DownloadFile(url, websiteFilePath);
+        writeFile("\n<url>" + url + "</url>", websiteFilePath);
+        Console.WriteLine(websiteFilePath);
+        //return webClient.DownloadString(url);
+        return File.ReadAllText(websiteFilePath);
     }
 
     public static string getRobot(string url)
@@ -564,289 +565,289 @@ public class MyClass
         return textFind;
     }
 
-    static void findASE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("ภาควิชาวิศวกรรมการบินและอวกาศ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - ผู้บริหารภาควิชา"))
-        {
-            string HREF;
-            HREF = "hreflang=\"th\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //static void findASE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("ภาควิชาวิศวกรรมการบินและอวกาศ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - ผู้บริหารภาควิชา"))
+    //    {
+    //        string HREF;
+    //        HREF = "hreflang=\"th\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
                 
-                string saveText = "ภาควิชาวิศวกรรมการบินและอวกาศ : " + chiefName;
-                checkChiefList(saveText);
+    //            string saveText = "ภาควิชาวิศวกรรมการบินและอวกาศ : " + chiefName;
+    //            checkChiefList(saveText);
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-    static void findEE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("ภาควิชาวิศวกรรมไฟฟ้า คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - วชิระ จงบุรี, ผศ."))
-        {
-            string HREF;
-            HREF = "<strong>";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //static void findEE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("ภาควิชาวิศวกรรมไฟฟ้า คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - วชิระ จงบุรี, ผศ."))
+    //    {
+    //        string HREF;
+    //        HREF = "<strong>";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                string saveText = "ภาควิชาวิศวกรรมไฟฟ้า : " + chiefName;
-                checkChiefList(saveText);
-
-
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
-
-    static void findIE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("คณาจารย์ - ภาควิชาวิศวกรรมอุตสาหการ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์"))
-        {
-            string HREF;
-            HREF = "<div class=\"staff_name style62 style90 style96\"><strong>";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf(" (หัวหน้าภาควิชาวิศวกรรมอุตสาหการ)", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
-
-                string saveText = "ภาควิชาวิศวกรรมอุตสาหการ : " + chiefName;
-                checkChiefList(saveText);
+    //            string saveText = "ภาควิชาวิศวกรรมไฟฟ้า : " + chiefName;
+    //            checkChiefList(saveText);
 
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-    static void findME(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("ฝ่ายบริหารและคณาจารย์ - ภาควิชาวิศวกรรมเครื่องกล	คณะวิศวกรรมศาสตร์, มหาวิทยาลัยเกษตรศาสตร์"))
-        {
-            string HREF;
-            HREF = "<a href=\"/index.php/th/faculties-staffs-2/administrations-staffs/53-lecturer/224-prapot.html\" hreflang=\"th\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //static void findIE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("คณาจารย์ - ภาควิชาวิศวกรรมอุตสาหการ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์"))
+    //    {
+    //        string HREF;
+    //        HREF = "<div class=\"staff_name style62 style90 style96\"><strong>";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf(" (หัวหน้าภาควิชาวิศวกรรมอุตสาหการ)", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                string saveText = "ภาควิชาวิศวกรรมเครื่องกล : " + chiefName;
-                checkChiefList(saveText);
+    //            string saveText = "ภาควิชาวิศวกรรมอุตสาหการ : " + chiefName;
+    //            checkChiefList(saveText);
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
 
-    static void findWRE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("ภาควิชาวิศวกรรมทรัพยากรน้ำ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - ผู้บริหารภาควิชา"))
-        {
-            string HREF;
-            HREF = "<h2 class=\"art-postheader\"><a href=\"/index.php/th/tea/198-jirawat.html\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("(", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-                string saveText = "ภาควิชาวิศวกรรมทรัพยากรน้ำ : " + chiefName;
-                checkChiefList(saveText);
+    //static void findME(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("ฝ่ายบริหารและคณาจารย์ - ภาควิชาวิศวกรรมเครื่องกล	คณะวิศวกรรมศาสตร์, มหาวิทยาลัยเกษตรศาสตร์"))
+    //    {
+    //        string HREF;
+    //        HREF = "<a href=\"/index.php/th/faculties-staffs-2/administrations-staffs/53-lecturer/224-prapot.html\" hreflang=\"th\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            string saveText = "ภาควิชาวิศวกรรมเครื่องกล : " + chiefName;
+    //            checkChiefList(saveText);
 
-    static void findEVE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("ภาควิชาวิศวกรรมสิ่งแวดล้อม คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - หน้าแรก"))
-        {
-            string HREF;
-            HREF = "<h2 class=\"art-postheader\"><a href=\"/index.php/th/tea/190-suchat2\" class=\"postheader\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("(", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-                string saveText = "ภาควิชาวิศวกรรมสิ่งแวดล้อม : " + chiefName;
-                checkChiefList(saveText);
+    //static void findWRE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("ภาควิชาวิศวกรรมทรัพยากรน้ำ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - ผู้บริหารภาควิชา"))
+    //    {
+    //        string HREF;
+    //        HREF = "<h2 class=\"art-postheader\"><a href=\"/index.php/th/tea/198-jirawat.html\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("(", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            string saveText = "ภาควิชาวิศวกรรมทรัพยากรน้ำ : " + chiefName;
+    //            checkChiefList(saveText);
 
-    static void findCHE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-            .Equals("home"))
-        {
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-            string HREF;
-            HREF = "<img src=\"/images/sia.jpg\" border=\"0\" style=\"border: 0; float: left;\" /><a href=\"http://pirun.ku.ac.th/~fengsia/\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //static void findEVE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("ภาควิชาวิศวกรรมสิ่งแวดล้อม คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ - หน้าแรก"))
+    //    {
+    //        string HREF;
+    //        HREF = "<h2 class=\"art-postheader\"><a href=\"/index.php/th/tea/190-suchat2\" class=\"postheader\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("(", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                string saveText = "ภาควิชาวิศวกรรมเคมี : " + chiefName;
-                checkChiefList(saveText);
+    //            string saveText = "ภาควิชาวิศวกรรมสิ่งแวดล้อม : " + chiefName;
+    //            checkChiefList(saveText);
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
-    static void findCPESKE(string page)
-    {
-        if (checkPage(page, "รศ.ดร.อนันต์ ", "เพิ่ม")
-                      .Equals("ผล"))
-        {
-            Console.WriteLine("gg");
-            string HREF;
-            HREF = "39w\" sizes=\"(max-width: 90px) 100vw, 90px\" /></td>\n<td style=\"text-align: center;\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
-                string saveText = "ภาควิชาวิศวกรรมคอมพิวเตอร์ : " + chiefName;
-                checkChiefList(saveText);
+    //static void findCHE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //        .Equals("home"))
+    //    {
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
-    static void findMAT(string page)
-    {
-        if (checkPage(page, "assoc.prof.", " polsilapa")
-                      .Equals("sureerat"))
-        {
-            Console.WriteLine("gg");
-            string HREF;
-            HREF = "uploadFile/user_pic/img_10327269_10203423473091000_2011182093_n.jpg\" style=\" margin-bottom:10px;\" /></div><div class=\"c78r\" align=\"left\"><div class=\"subcolumns\"><div class=\"c35l\" align=\"left\"><h3 style=\" padding-top:10px;\">";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //        string HREF;
+    //        HREF = "<img src=\"/images/sia.jpg\" border=\"0\" style=\"border: 0; float: left;\" /><a href=\"http://pirun.ku.ac.th/~fengsia/\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                string saveText = "ภาควิชาวัสดุ : " + chiefName;
-                checkChiefList(saveText);
+    //            string saveText = "ภาควิชาวิศวกรรมเคมี : " + chiefName;
+    //            checkChiefList(saveText);
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
+    //static void findCPESKE(string page)
+    //{
+    //    if (checkPage(page, "รศ.ดร.อนันต์ ", "เพิ่ม")
+    //                  .Equals("ผล"))
+    //    {
+    //        Console.WriteLine("gg");
+    //        string HREF;
+    //        HREF = "39w\" sizes=\"(max-width: 90px) 100vw, 90px\" /></td>\n<td style=\"text-align: center;\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-    static void findCE(string page)
-    {
-        if (checkPage(page, "<title>", "</title>")
-                      .Equals("ภาควิชาวิศวกรรมโยธา คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์   &raquo; ดร.วันชัย ยอดสุดใจ"))
-        {
-            string HREF;
-            HREF = "&raquo; ";
-            int HREFL;
-            HREFL = HREF.Length;
-            int start = 0, end = 0, url_length = 0, countFind = 0;
-            string chiefName;
-            while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
-            {
-                start = page.IndexOf(HREF, start) + HREFL;
-                end = page.IndexOf("<", start);
-                url_length = end - start;
-                chiefName = page.Substring(start, url_length);
-                countFind++;
+    //            string saveText = "ภาควิชาวิศวกรรมคอมพิวเตอร์ : " + chiefName;
+    //            checkChiefList(saveText);
 
-                string saveText = "ภาควิชาโยธา : " + chiefName;
-                checkChiefList(saveText);
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
+    //static void findMAT(string page)
+    //{
+    //    if (checkPage(page, "assoc.prof.", " polsilapa")
+    //                  .Equals("sureerat"))
+    //    {
+    //        Console.WriteLine("gg");
+    //        string HREF;
+    //        HREF = "uploadFile/user_pic/img_10327269_10203423473091000_2011182093_n.jpg\" style=\" margin-bottom:10px;\" /></div><div class=\"c78r\" align=\"left\"><div class=\"subcolumns\"><div class=\"c35l\" align=\"left\"><h3 style=\" padding-top:10px;\">";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
 
-                start = end;
-                System.Threading.Thread.Sleep(5);
-            }
-        }
-    }
+    //            string saveText = "ภาควิชาวัสดุ : " + chiefName;
+    //            checkChiefList(saveText);
+
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
+
+    //static void findCE(string page)
+    //{
+    //    if (checkPage(page, "<title>", "</title>")
+    //                  .Equals("ภาควิชาวิศวกรรมโยธา คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์   &raquo; ดร.วันชัย ยอดสุดใจ"))
+    //    {
+    //        string HREF;
+    //        HREF = "&raquo; ";
+    //        int HREFL;
+    //        HREFL = HREF.Length;
+    //        int start = 0, end = 0, url_length = 0, countFind = 0;
+    //        string chiefName;
+    //        while (page.IndexOf(HREF, start) >= 0 && countFind < 1)
+    //        {
+    //            start = page.IndexOf(HREF, start) + HREFL;
+    //            end = page.IndexOf("<", start);
+    //            url_length = end - start;
+    //            chiefName = page.Substring(start, url_length);
+    //            countFind++;
+
+    //            string saveText = "ภาควิชาโยธา : " + chiefName;
+    //            checkChiefList(saveText);
+
+    //            start = end;
+    //            System.Threading.Thread.Sleep(5);
+    //        }
+    //    }
+    //}
 
     static void checkChiefList(string saveText)
     {
@@ -966,7 +967,7 @@ public class MyClass
                     {
                         limitCount = 0;
                     }
-
+                    
                     visitedQ.enQueue(url);
                     header = getHeader(url, reportErrorPageFile);
                     if (header["status_code"].IndexOf("OK") >= 0 && header["Content-Type"].IndexOf("text/html") >= 0)
@@ -989,7 +990,7 @@ public class MyClass
                         //findCE(page);
                         //findCPESKE(page);
 
-                        saveWeb(url, page);
+                        //saveWeb(url, page);
 
                         //System.Threading.Thread.Sleep(100);
                         Console.WriteLine("{0} - {1}", frontierQ.Count(), visitedQ.Count());
