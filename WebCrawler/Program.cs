@@ -93,42 +93,42 @@ public class MyClass
 
     public static string getPage(string url, int nbPage)
     {
-        ////WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
-        //WebRequest req = WebRequest.Create(url);
-        //((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
-        //req.Timeout = 1000; // 1000ms
-        //// handle https
-        //ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-        //// print some message
-        //Console.Write("[{0}] ", nbPage);
-        //CCW(ConsoleColor.Green, "Downloading>> ");
-        //CCWL(ConsoleColor.White, url);
-        //// receive response from target url
-        //WebResponse resp = req.GetResponse();
-        //// get response stream (data)
-        //Stream st = resp.GetResponseStream();
-        //// create streamreader pbject to read the data
-        //StreamReader sr = new StreamReader(st);
-        //string page = sr.ReadToEnd();
-        //sr.Close();
-        //resp.Close();
-        //return page;
-
-        MyWebClient webClient = new MyWebClient();
-        webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
-        webClient.Encoding = System.Text.Encoding.UTF8;
+        //WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
+        WebRequest req = WebRequest.Create(url);
+        ((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
+        req.Timeout = 1000; // 1000ms
+        // handle https
+        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+        // print some message
         Console.Write("[{0}] ", nbPage);
         CCW(ConsoleColor.Green, "Downloading>> ");
         CCWL(ConsoleColor.White, url);
+        // receive response from target url
+        WebResponse resp = req.GetResponse();
+        // get response stream (data)
+        Stream st = resp.GetResponseStream();
+        // create streamreader pbject to read the data
+        StreamReader sr = new StreamReader(st);
+        string page = sr.ReadToEnd();
+        sr.Close();
+        resp.Close();
+        return page;
 
-        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
-        initFile(websitesDirPath + "\\" + websiteFileName);
-        
-        webClient.DownloadFile(url, websitesDirPath + "\\" + websiteFileName);
-        writeFile("\n<url>" + url + "</url>", websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
-        Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
-        //return webClient.DownloadString(url);
-        return File.ReadAllText(websitesDirPath + "\\" + websiteFileName);
+        //MyWebClient webClient = new MyWebClient();
+        //webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
+        //webClient.Encoding = System.Text.Encoding.UTF8;
+        //Console.Write("[{0}] ", nbPage);
+        //CCW(ConsoleColor.Green, "Downloading>> ");
+        //CCWL(ConsoleColor.White, url);
+
+        //string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
+        //initFile(websitesDirPath + "\\" + websiteFileName);
+
+        //webClient.DownloadFile(url, websitesDirPath + "\\" + websiteFileName);
+        //writeFile("\n<url>" + url + "</url>", websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
+        //Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
+        ////return webClient.DownloadString(url);
+        //return File.ReadAllText(websitesDirPath + "\\" + websiteFileName);
     }
 
     public static string getRobot(string url)
@@ -162,7 +162,6 @@ public class MyClass
             ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
             // create response object
             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            if (resp.StatusCode == HttpStatusCode.OK)
             {
                 foreach (string key in resp.Headers)
                 {
@@ -289,7 +288,9 @@ public class MyClass
                     subjects = page.Substring(start, url_length);
                     countFind++;
 
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", ""), thaiSubjectsFile);
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -311,7 +312,9 @@ public class MyClass
                     subjects = page.Substring(start, url_length);
                     countFind++;
 
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", ""), thaiSubjectsFile);
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -333,7 +336,10 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "").Replace("<a href=\"http://ie.eng.ku.ac.th/master.html\" target=\"_blank\">",""), thaiSubjectsFile);
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "").Replace("<a href=\"http://ie.eng.ku.ac.th/master.html\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -354,16 +360,19 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">","")
-                        .Replace("<a href=\"http://safety.eng.ku.ac.th/\" target=\"_blank\">","")
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
+                        .Replace("<a href=\"http://safety.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://pe.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.meipt.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://emp.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.mfpe.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.stbe.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">",""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -384,12 +393,15 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://ceinter.eng.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -411,8 +423,11 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
-                        .Replace("<a href=\"http://ie.eng.ku.ac.th/doctor.html\" target=\"_blank\">", ""), thaiSubjectsFile);
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
+                        .Replace("<a href=\"http://ie.eng.ku.ac.th/doctor.html\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -433,12 +448,15 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://emp.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://cpeg.cpe.ku.ac.th/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -459,10 +477,13 @@ public class MyClass
                     url_length = end - start;
                     subjects = page.Substring(start, url_length);
                     countFind++;
-                    writeFile(subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
+
+                    string subjectName = subjects.Replace("<li>", "").Replace("</li>", "").Replace("</a>", "")
                         .Replace("<a href=\"http://ieinter.eng.ku.ac.th/\" target=\"_blank\">", "")
                         .Replace("<a href=\"http://www.pirun.ku.ac.th/%7efengsup/\" target=\"_blank\">", "")
-                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", ""), thaiSubjectsFile);
+                        .Replace("<a href=\"http://www.pirun.ku.ac.th/%7Efengsup/\" target=\"_blank\">", "");
+                    thaiSubjectList.Add(subjectName);
+                    writeFile(subjectName, thaiSubjectsFile);
                     start = end;
                     System.Threading.Thread.Sleep(5);
                 }
@@ -515,11 +536,11 @@ public class MyClass
 
     static void saveWeb(string url, string page)
     {
-        
-        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_"); ;
+        Console.WriteLine(websitesDirPath + "\\" + url);
+        string websiteFileName = url.Replace(":", ".").Replace("\\", ".").Replace("/", ".").Replace("?", ".").Replace(";", ".");
         initFile(websitesDirPath + "\\" + websiteFileName);
-        Console.WriteLine(websitesDirPath + "\\" + websiteFileName);
-        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName /*+ ".html"*/);
+        writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName + ".txt");
+
     }
 
     static string checkPage(string page, string startPos, string endPos)
@@ -844,7 +865,9 @@ public class MyClass
         initFile(chiefFile);
         initFile(reportErrorPageFile);
 
+        //string url = "https://ku.ac.th";
         string url = "https://mike.cpe.ku.ac.th/seed";
+
         //string url = "http://mike.cpe.ku.ac.th/01204453";
         //string url = "https://developer.android.com/preview/setup-sdk.html#java8";
         //string url = "http://www.eng.ku.ac.th/?page_id=9690";
@@ -870,10 +893,10 @@ public class MyClass
         string page = "";
         int nbPage = 0, MAXPAGE = 1000;
 
-        writeFile("1:ข้อมูลแสดงความสัมพันธ์การเชื่อมโยงกันของเว็บเพจ", linkPathFile);
-        writeFile("2.1:Error Page Log", reportErrorPageFile);
-        writeFile("2.4:Thai Subjects", thaiSubjectsFile);
-        writeFile("2.5:Chief", chiefFile);
+        //writeFile("1:ข้อมูลแสดงความสัมพันธ์การเชื่อมโยงกันของเว็บเพจ", linkPathFile);
+        //writeFile("2.1:Error Page Log", reportErrorPageFile);
+        //writeFile("2.4:Thai Subjects", thaiSubjectsFile);
+        //writeFile("2.5:Chief", chiefFile);
 
         int limitLoad = 5;
         int limitCount = 0;
@@ -966,7 +989,7 @@ public class MyClass
                         //findCE(page);
                         //findCPESKE(page);
 
-                        //saveWeb(url, page);
+                        saveWeb(url, page);
 
                         //System.Threading.Thread.Sleep(100);
                         Console.WriteLine("{0} - {1}", frontierQ.Count(), visitedQ.Count());
@@ -1005,11 +1028,11 @@ public class MyClass
         }
 
         //2.5
-        Console.WriteLine("2.5:Chief");
-        foreach (string chief in chiefList)
-        {
-            Console.WriteLine(chief);
-        }
+        //Console.WriteLine("2.5:Chief");
+        //foreach (string chief in chiefList)
+        //{
+        //    Console.WriteLine(chief);
+        //}
 
         Console.Read();
     }
