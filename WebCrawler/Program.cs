@@ -93,27 +93,28 @@ public class MyClass
 
     public static string getPage(string url, int nbPage)
     {
-        ////WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
-        //WebRequest req = WebRequest.Create(url);
-        //((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
-        //req.Timeout = 1000; // 1000ms
-        //// handle https
-        //ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-        //// print some message
-        //Console.Write("[{0}] ", nbPage);
-        //CCW(ConsoleColor.Green, "Downloading>> ");
-        //CCWL(ConsoleColor.White, url);
-        //// receive response from target url
-        //WebResponse resp = req.GetResponse();
-        //// get response stream (data)
-        //Stream st = resp.GetResponseStream();
-        //// create streamreader pbject to read the data
-        //StreamReader sr = new StreamReader(st);
-        //string page = sr.ReadToEnd();
-        //sr.Close();
-        //resp.Close();
-        //return page;
+        //WebRequest.DefaultWebProxy = new WebProxy("http://yourproxy.com:3128");
+        WebRequest req = WebRequest.Create(url);
+        ((HttpWebRequest)req).UserAgent = "204453 Spider written by Punnatad Chansri, id5610500231";
+        req.Timeout = 1000; // 1000ms
+        // handle https
+        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+        // print some message
+        Console.Write("[{0}] ", nbPage);
+        CCW(ConsoleColor.Green, "Downloading>> ");
+        CCWL(ConsoleColor.White, url);
+        // receive response from target url
+        WebResponse resp = req.GetResponse();
+        // get response stream (data)
+        Stream st = resp.GetResponseStream();
+        // create streamreader pbject to read the data
+        StreamReader sr = new StreamReader(st);
+        string page = sr.ReadToEnd();
+        sr.Close();
+        resp.Close();
+        return page;
 
+        /*
         MyWebClient webClient = new MyWebClient();
         webClient.Headers.Add("user-agent", "204453 Spider written by Punnatad Chansri, id5610500231");
         webClient.Encoding = System.Text.Encoding.UTF8;
@@ -122,14 +123,14 @@ public class MyClass
         CCWL(ConsoleColor.White, url);
 
         string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(".", "_").Replace(";", "_");
-        initFile(websitesDirPath + "\\" + websiteFileName);
-
+        
         string websiteFilePath = websitesDirPath + "\\" + websiteFileName + ".txt";
+        initFile(websiteFilePath);
         webClient.DownloadFile(url, websiteFilePath);
         writeFile("\n<url>" + url + "</url>", websiteFilePath);
         Console.WriteLine(websiteFilePath);
         //return webClient.DownloadString(url);
-        return File.ReadAllText(websiteFilePath);
+        return File.ReadAllText(websiteFilePath);*/
     }
 
     public static string getRobot(string url)
@@ -215,20 +216,6 @@ public class MyClass
             //Console.ReadLine();
             start = end;
             //System.Threading.Thread.Sleep(5);
-        }
-    }
-
-    static void writeFile(string text, string filePath)
-    {
-        try
-        {
-            StreamWriter s = new StreamWriter(filePath, true);
-            s.WriteLine(text);
-            s.Close();
-        }
-        catch (IOException e)
-        {
-            Console.WriteLine("IO Error");
         }
     }
 
@@ -535,13 +522,51 @@ public class MyClass
         deleteExistFile(pathFile);
     }
 
+    /*
+    static void writeFile(string text, string filePath)
+    {
+        try
+        {
+            StreamWriter s = new StreamWriter(filePath, true);
+            s.WriteLine(text);
+            s.Close();
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("IO Error");
+        }
+    }*/
+
+    static void writeFile(string text, string filePath)
+    {
+        /*
+        using (StreamWriter writer = new StreamWriter(filePath, true, Encoding.UTF8))
+        {
+            writer.WriteLine(text);
+        }*/
+
+        FileStream fs = null;
+        try
+        {
+            fs = new FileStream(filePath, FileMode.Append);
+            using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8, 512))
+            {
+                writer.WriteLine(text);
+            }
+        }
+        finally
+        {
+            if (fs != null)
+                fs.Dispose();
+        }
+    }
+
     static void saveWeb(string url, string page)
     {
         Console.WriteLine(websitesDirPath + "\\" + url);
-        string websiteFileName = url.Replace(":", ".").Replace("\\", ".").Replace("/", ".").Replace("?", ".").Replace(";", ".");
-        initFile(websitesDirPath + "\\" + websiteFileName);
+        string websiteFileName = url.Replace(":", "_").Replace("\\", "_").Replace("/", "_").Replace("?", "_").Replace(";", "_").Replace(".", "_");
+        initFile(websitesDirPath + "\\" + websiteFileName + ".txt");
         writeFile("<url>" + url + "</url>\n" + page, websitesDirPath + "\\" + websiteFileName + ".txt");
-
     }
 
     static string checkPage(string page, string startPos, string endPos)
@@ -990,7 +1015,7 @@ public class MyClass
                         //findCE(page);
                         //findCPESKE(page);
 
-                        //saveWeb(url, page);
+                        saveWeb(url, page);
 
                         //System.Threading.Thread.Sleep(100);
                         Console.WriteLine("{0} - {1}", frontierQ.Count(), visitedQ.Count());
